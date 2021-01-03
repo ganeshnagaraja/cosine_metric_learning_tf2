@@ -9,12 +9,6 @@ import os
 from functools import partial
 
 
-class Config():
-	training_dir = "/home/gani/DL_Mylearning/object_tracking/cars-dataset/object-tracking-crops-data/crops/"
-	testing_dir = "/home/gani/DL_Mylearning/object_tracking/cars-dataset/object-tracking-crops-data/crops_test/"
-	train_batch_size = 128
-	train_number_epochs = 2
-
 class SiameseDataset():
 
 	def __init__(self, imagesFolerDataset, new_size):
@@ -66,9 +60,9 @@ class SiameseDataset():
 			negative = negative.convert("RGB")
 			positive = positive.convert("RGB")
 
-			anchor = np.array(anchor.resize((self.new_size, self.new_size)), dtype=np.float32)
-			negative = np.array(negative.resize((self.new_size, self.new_size)), dtype=np.float32)
-			positive = np.array(positive.resize((self.new_size, self.new_size)), dtype=np.float32)
+			anchor = np.array(anchor.resize((self.new_size, self.new_size)), dtype=np.float32) / 255.0
+			negative = np.array(negative.resize((self.new_size, self.new_size)), dtype=np.float32) / 255.0
+			positive = np.array(positive.resize((self.new_size, self.new_size)), dtype=np.float32) / 255.0
 
 			yield anchor, positive, negative
 
@@ -78,16 +72,16 @@ def create_batch_generator(images_dir, new_size, batch_size):
 	generator = partial(cars.generate)
 	dataset = tf.data.Dataset.from_generator(generator, (tf.float32, tf.float32, tf.float32))
 
-	dataset = dataset.batch(batch_size)
+	dataset = dataset.shuffle(50).batch(batch_size)
 
 	return dataset
 
 
 
-batch_generator = create_batch_generator(Config.training_dir, new_size=128, batch_size=Config.train_batch_size)
-
-for i, (anchor, positive, negative) in enumerate(batch_generator):
-	print("-------------------------------------------yo ------------------------", i)
+# batch_generator = create_batch_generator(Config.training_dir, new_size=128, batch_size=Config.train_batch_size)
+#
+# for i, (anchor, positive, negative) in enumerate(batch_generator):
+# 	print("-------------------------------------------yo ------------------------", i)
 	# print(anchor)
 	# print(positive)
 	# print(negative)

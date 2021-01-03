@@ -1,15 +1,13 @@
 import tensorflow as tf
-from residual_block import Residual
+from network.residual_block import Residual
 
-NUM_CLASSES = 184
-image_height = 128
-image_width = 64
-channels = 3
 
 
 class SiameseNet(tf.keras.Model):
     def __init__(self, classes):
         super(SiameseNet, self).__init__()
+
+        self.num_classes = classes
 
         self.conv1 = tf.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), strides=1, padding="same", input_shape=(128, 64, 3))
         self.bn1 = tf.keras.layers.BatchNormalization()
@@ -33,7 +31,7 @@ class SiameseNet(tf.keras.Model):
         self.flatten = tf.keras.layers.Flatten()
 
         # Dense layer
-        self.fc = tf.keras.layers.Dense(units=NUM_CLASSES, activation=tf.keras.activations.elu)
+        self.fc = tf.keras.layers.Dense(units=self.num_classes, activation=tf.keras.activations.elu)
 
     def call_once(self, inputs, training=None, mask=None):
         x = self.conv1(inputs)
