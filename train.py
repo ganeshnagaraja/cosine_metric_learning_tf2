@@ -81,7 +81,7 @@ for epoch in range(Config.train_number_epochs):
 	if epoch % 5 == 0:
 		if not os.path.exists('ckpts/'):
 			os.mkdir('ckpts')
-		net.save_weights(filepath='ckpts/model_'+str(epoch), save_format='pb')
+		net.save_weights(filepath='ckpts/model_'+str(epoch), save_format='tf')
 
 
 

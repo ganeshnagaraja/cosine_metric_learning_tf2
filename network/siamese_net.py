@@ -77,7 +77,6 @@ class TripletLoss(tf.keras.Model):
         distance_positive = tf.keras.losses.cosine_similarity(anchor,positive) #Each is batch X 512
         distance_negative = tf.keras.losses.cosine_similarity(anchor,negative)  # .pow(.5)
         losses = (1- distance_positive)**2 + (0 - distance_negative)**2
-        print(losses)#Margin not used in cosine case.
         return tf.math.reduce_mean(losses) if size_average else tf.reduce_sum(losses)
 
 
